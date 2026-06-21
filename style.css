@@ -1,0 +1,116 @@
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    color: white;
+    background: linear-gradient(135deg, #0f172a, #1e293b, #312e81);
+    background-size: 300% 300%;
+    animation: bgmove 10s infinite alternate;
+    min-height: 100vh;
+}
+
+@keyframes bgmove {
+    0% {
+        background-position: left;
+    }
+
+    100% {
+        background-position: right;
+    }
+}
+
+.container {
+    width: 90%;
+    max-width: 800px;
+    margin: auto;
+    padding: 30px 20px;
+    text-align: center;
+}
+
+.form-container {
+    display: grid;
+    gap: 15px;
+    margin-top: 20px;
+}
+
+input,
+select {
+    padding: 15px;
+    background: rgba(255, 255, 255, 0.08);
+    border: none;
+    border-radius: 15px;
+    color: white;
+    font-size: 16px;
+    transition: 0.3s;
+}
+
+input::placeholder {
+    color: rgba(255, 255, 255, 0.7);
+}
+
+input:focus,
+select:focus {
+    outline: none;
+    transform: scale(1.03);
+    box-shadow: 0 0 20px #2563eb;
+}
+
+button {
+    padding: 18px;
+    font-size: 18px;
+    border: none;
+    border-radius: 15px;
+    background: linear-gradient(90deg, #2563eb, #9333ea);
+    color: white;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+button:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 0 30px #9333ea;
+}
+
+.loader {
+    display: none;
+    width: 60px;
+    height: 60px;
+    border: 7px solid rgba(255, 255, 255, 0.2);
+    border-top: 7px solid cyan;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin: 20px auto;
+}
+
+@keyframes spin {
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+.card {
+    margin-top: 30px;
+    padding: 30px;
+    background: rgba(255, 255, 255, 0.08);
+    border-radius: 20px;
+    backdrop-filter: blur(20px);
+    animation: fadein 0.8s;
+}
+
+@keyframes fadein {
+    from {
+        opacity: 0;
+        transform: translateY(50px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.chart-container {
+    margin-top: 30px;
+    background: rgba(255, 255, 255, 0.08);
+    padding: 20px;
+    border-radius: 20px;
+}
