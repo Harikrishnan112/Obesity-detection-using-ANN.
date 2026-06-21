@@ -1,0 +1,91 @@
+import pandas as pd
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import StandardScaler, LabelEncoder
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.layers import Dense
+import joblib
+import numpy as np
+
+df = pd.read_csv(r'C:\Users\HARI\Downloads\obesity\Obesity dataset.csv')
+print(data)
+print(f"number of duplicated rows :{data.duplicated().sum()}")
+print(data.isnull().sum())
+data = data.drop_duplicates()
+
+encoders={}
+for col in ["Gender","CALC","FAVC","SCC","SMOKE","family_history_with_overweight","CAEC","MTRANS","NObeyesdad"]:
+    encoder=LabelEncoder()
+    data[col]=encoder.fit_transform(data[col])
+    encoders[col]=encoder
+
+X = data.drop('NObeyesdad', axis=1)
+Y= data['NObeyesdad']
+
+
+X_train, X_test, y_train, y_test = train_test_split(X, Y, test_size=0.2, random_state=42)
+
+scaler = StandardScaler()
+X_train_scaled = scaler.fit_transform(X_train)
+X_test_scaled = scaler.transform(X_test)
+
+# Define the model
+model = Sequential()
+
+model.add(Dense(
+64,
+activation='relu',
+input_shape=(X_train.shape[1],)
+))
+
+model.add(Dense(
+32,
+activation='relu'
+))
+
+model.add(Dense(
+7,
+activation='softmax'
+))
+
+# Compile the model
+model.compile(
+
+optimizer='adam',
+
+loss='sparse_categorical_crossentropy',
+
+metrics=['accuracy']
+
+)
+
+# Train the model
+model.fit(
+X_train_scaled,
+y_train,
+epochs=100
+)
+
+# Make prediction and evaluate
+new_sample_values = [21.0, 0, 1.62, 64.0, 2, 0, 2.0, 3.0, 0, 0, 2.0, 1, 0.0, 1.0, 2, 3]
+new_data = pd.DataFrame([new_sample_values], columns=X.columns)
+
+new_data_scaled = scaler.transform(new_data)
+
+prediction = model.predict(new_data_scaled)
+
+loss, test_model_accuracy = model.evaluate(X_test_scaled, y_test)
+print(f"Model accuracy on test set: {test_model_accuracy:.4f}")
+print("")
+print("----ACCURACY OF THE PROVIDED DATASET---- :",test_model_accuracy*100)
+
+print("Raw prediction output:", prediction)
+
+predicted_class_index = np.argmax(prediction)
+predicted_label = encoders["NObeyesdad"].inverse_transform([predicted_class_index])[0]
+
+print(f"Predicted Obesity Level: {predicted_label}")
+
+# Save the trained model, scaler, and encoders
+model.save("obesity_model.keras")
+joblib.dump(scaler,"scaler.pkl")
+joblib.dump(encoders, "encoders.pkl")
